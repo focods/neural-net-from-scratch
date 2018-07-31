@@ -16,6 +16,10 @@ class NeuralNetwork:
         self.y          = y
         self.output     = np.zeros(self.y.shape)
 
+        #adding just to print
+        self.d_weights2 = self.weights1
+        self.d_weights2 = self.weights2
+
     def feedforward(self):
         self.layer1 = sigmoid(np.dot(self.input, self.weights1))
         self.output = sigmoid(np.dot(self.layer1, self.weights2))
@@ -25,6 +29,9 @@ class NeuralNetwork:
         d_weights2 = np.dot(self.layer1.T, (2*(self.y - self.output) * sigmoid_derivative(self.output)))
         d_weights1 = np.dot(self.input.T,  (np.dot(2*(self.y - self.output) * sigmoid_derivative(self.output), self.weights2.T) * sigmoid_derivative(self.layer1)))
 
+        # adding just to print
+        self.d_weights2 = d_weights1
+        self.d_weights1 = d_weights2
         # update the weights with the derivative (slope) of the loss function
         self.weights1 += d_weights1
         self.weights2 += d_weights2
@@ -38,8 +45,22 @@ if __name__ == "__main__":
     y = np.array([[0],[1],[1],[0]])
     nn = NeuralNetwork(X,y)
 
-    for i in range(1500):
+    for i in range(300):
         nn.feedforward()
         nn.backprop()
-
-    print(nn.output)
+        if i >= 297:
+            print(f'------ Iteration {i} ---------')
+            print('Layer 1')
+            print(nn.layer1)
+            print('Input')
+            print(nn.input)
+            print('Weights 1')
+            print(nn.weights1)
+            print('Weights 2')
+            print(nn.weights2)
+            print('D Weights 1')
+            print(nn.d_weights1)
+            print('D Weights 2')
+            print(nn.d_weights2)
+            print('Output')
+            print(nn.output)
